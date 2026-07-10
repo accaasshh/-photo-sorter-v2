@@ -16,6 +16,17 @@ const preview = document.getElementById("preview");
 const previewImage = document.getElementById("previewImage");
 const closePreview = document.getElementById("closePreview");
 
+/* ==========================
+   FILTER TABS
+========================== */
+
+const tabs = document.querySelectorAll(".tab");
+let currentFilter = "ALL";
+
+/* ==========================
+   DATA
+========================== */
+
 let photos = [];
 
 /* ==========================
@@ -33,7 +44,7 @@ async function loadPhotos() {
 }
 
 /* ==========================
-   IMAGE UPLOAD
+   UPLOAD
 ========================== */
 
 uploadBtn.onclick = () => uploadInput.click();
@@ -73,18 +84,32 @@ async function uploadFiles(e){
 }
 
 /* ==========================
+   FILTER TABS
+========================== */
+
+tabs.forEach(tab=>{
+
+    tab.onclick=()=>{
+
+        tabs.forEach(t=>t.classList.remove("activeTab"));
+
+        tab.classList.add("activeTab");
+
+        currentFilter=tab.dataset.filter;
+
+        renderPhotos();
+
+    };
+
+});
+
+/* ==========================
    RENDER
 ========================== */
 
 function renderPhotos(){
 
     const keyword = search.value.toLowerCase();
-
-    const filtered = photos.filter(photo =>
-        photo.originalName
-        .toLowerCase()
-        .includes(keyword)
-    );
 
     total.innerText = photos.length;
 
@@ -94,16 +119,33 @@ function renderPhotos(){
     inactive.innerText =
         photos.filter(p=>p.status==="INACTIVE").length;
 
+    const filtered = photos.filter(photo=>{
+
+        const matchesSearch =
+            photo.originalName
+            .toLowerCase()
+            .includes(keyword);
+
+        const matchesFilter =
+            currentFilter==="ALL" ||
+            photo.status===currentFilter;
+
+        return matchesSearch && matchesFilter;
+
+    });
+
     if(filtered.length===0){
 
         gallery.innerHTML=`
+
         <div class="empty">
 
             <h2>No Photos Found</h2>
 
-            <p>Upload images to begin.</p>
+            <p>No images available.</p>
 
         </div>
+
         `;
 
         return;
@@ -114,56 +156,56 @@ function renderPhotos(){
 
     filtered.forEach(photo=>{
 
-        gallery.innerHTML+=`
+        gallery.innerHTML += `
 
 <div class="photo ${photo.status}">
 
-<button
-class="deleteIcon"
-onclick="removePhoto(${photo.id})">
-🗑
-</button>
+    <button
+        class="deleteIcon"
+        onclick="removePhoto(${photo.id})">
+        🗑
+    </button>
 
-<div class="imageWrapper">
+    <div class="imageWrapper">
 
-<img
-src="/uploads/${photo.filename}"
-alt="${photo.originalName}"
-onclick="openPreview('/uploads/${photo.filename}')">
+        <img
+            src="/uploads/${photo.filename}"
+            alt="${photo.originalName}"
+            onclick="openPreview('/uploads/${photo.filename}')">
 
-</div>
+    </div>
 
-<div class="photoContent">
+    <div class="photoContent">
 
-<h3>${photo.originalName}</h3>
+        <h3>${photo.originalName}</h3>
 
-<div class="status ${photo.status==="ACTIVE" ? "active":"inactive"}">
+        <div class="status ${photo.status==="ACTIVE"?"active":"inactive"}">
 
-${photo.status}
+            ${photo.status}
 
-</div>
+        </div>
 
-<div class="buttons">
+        <div class="buttons">
 
-<button
-class="activeBtn ${photo.status==="ACTIVE"?"selected":""}"
-onclick="setStatus(${photo.id},'ACTIVE')">
+            <button
+                class="activeBtn ${photo.status==="ACTIVE"?"selected":""}"
+                onclick="setStatus(${photo.id},'ACTIVE')">
 
-Active
+                Active
 
-</button>
+            </button>
 
-<button
-class="inactiveBtn ${photo.status==="INACTIVE"?"selected":""}"
-onclick="setStatus(${photo.id},'INACTIVE')">
+            <button
+                class="inactiveBtn ${photo.status==="INACTIVE"?"selected":""}"
+                onclick="setStatus(${photo.id},'INACTIVE')">
 
-Inactive
+                Inactive
 
-</button>
+            </button>
 
-</div>
+        </div>
 
-</div>
+    </div>
 
 </div>
 
@@ -172,9 +214,8 @@ Inactive
     });
 
 }
-
 /* ==========================
-   STATUS
+   CHANGE STATUS
 ========================== */
 
 async function setStatus(id,status){
@@ -198,7 +239,7 @@ async function setStatus(id,status){
 }
 
 /* ==========================
-   DELETE
+   DELETE PHOTO
 ========================== */
 
 async function removePhoto(id){
@@ -221,19 +262,19 @@ async function removePhoto(id){
 
 function openPreview(src){
 
-    previewImage.src=src;
+    previewImage.src = src;
 
     preview.classList.add("active");
 
 }
 
-closePreview.onclick=()=>{
+closePreview.onclick = ()=>{
 
     preview.classList.remove("active");
 
 };
 
-preview.onclick=(e)=>{
+preview.onclick = (e)=>{
 
     if(e.target===preview){
 
@@ -257,10 +298,14 @@ document.addEventListener("keydown",(e)=>{
    SEARCH
 ========================== */
 
-search.oninput=renderPhotos;
+search.oninput = ()=>{
+
+    renderPhotos();
+
+};
 
 /* ==========================
-   START
+   INITIAL LOAD
 ========================== */
 
 loadPhotos();
