@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Photo Sorter</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- ===========================
+         HEADER
+    ============================ -->
+
+    <header class="header">
+
+        <div>
+
+            <h1>📷 Photo Sorter</h1>
+
+            <p>Internal Photo Review Tool</p>
+
+        </div>
+
+        <div class="searchBox">
+
+            <input
+                type="text"
+                id="search"
+                placeholder="Search photos..."
+            >
+
+        </div>
+
+    </header>
+
+
+    <!-- ===========================
+         DASHBOARD
+    ============================ -->
+
+    <section class="dashboard">
+
+        <div class="dashboardCard totalCard">
+
+            <span>📷</span>
+
+            <h2 id="total">0</h2>
+
+            <p>Total Photos</p>
+
+        </div>
+
+        <div class="dashboardCard activeCard">
+
+            <span>🟢</span>
+
+            <h2 id="active">0</h2>
+
+            <p>Active</p>
+
+        </div>
+
+        <div class="dashboardCard inactiveCard">
+
+            <span>🔴</span>
+
+            <h2 id="inactive">0</h2>
+
+            <p>Inactive</p>
+
+        </div>
+
+    </section>
+
+
+    <!-- ===========================
+         ACTION BAR
+    ============================ -->
+
+    <section class="actionBar">
+
+        <button id="uploadBtn">
+
+            📷 Upload Images
+
+        </button>
+
+        <button id="folderBtn">
+
+            📂 Upload Folder
+
+        </button>
+
+    </section>
+
+
+    <!-- Hidden Inputs -->
+
+    <input
+        hidden
+        id="uploadInput"
+        type="file"
+        multiple
+        accept="image/*"
+    >
+
+    <input
+        hidden
+        id="folderInput"
+        type="file"
+        webkitdirectory
+        directory
+        multiple
+        accept="image/*"
+    >
+
+
+    <!-- ===========================
+         PHOTO GALLERY
+    ============================ -->
+
+    <section>
+
+        <div
+            id="gallery"
+            class="gallery"
+        >
+
+        </div>
+
+    </section>
+
+</div>
+
+
+<!-- ===========================
+     IMAGE PREVIEW
+============================ -->
+
+<div
+    id="preview"
+    class="preview"
+>
+
+    <span id="closePreview">
+
+        ✕
+
+    </span>
+
+    <img
+        id="previewImage"
+        src=""
+        alt=""
+    >
+
+</div>
+
+
+<script src="script.js"></script>
+
+</body>
+
+</html>
